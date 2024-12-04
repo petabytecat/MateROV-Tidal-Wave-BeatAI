@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marine Organism Detection Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .container {
+            text-align: center;
+        }
+        #imageContainer {
+            position: relative;
+            display: inline-block;
+            margin: 20px 0;
+        }
+        #mainImage {
+            max-width: 100%;
+            height: auto;
+        }
+        .bounding-box {
+            position: absolute;
+            border: 3px solid red;
+            pointer-events: none;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin: 10px;
+            cursor: pointer;
+        }
+        #info {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Marine Organism Detection Game</h1>
+        <button id="newImage">Get New Image</button>
+        <button id="runYolo">Run YOLOv9</button>
+        <div id="imageContainer">
+            <img id="mainImage" src="" alt="Marine organism">
+            <div id="boundingBox" class="bounding-box"></div>
+        </div>
+        <div id="info"></div>
+    </div>
+
+    <script>
+        const organisms = [
+            "Strongylocentrotus fragilis",
+            "Ophiuroidea",
+            "Porifera",
+            "Anoplopoma fimbria",
+            "Psolus squamatus",
+            "Actiniaria",
+            "Sebastolobus",
+            "Chionoecetes tanneri",
+            "Keratoisis",
+            "Asteroidea",
+            "Heterochone calyx",
+            "Merluccius productus",
+            "Rathbunaster californicus",
+            "Hexactinellida",
+            "Paragorgia arborea"
+        ];
+
+        let currentImageData = null;
+
+        function drawBoundingBox(box) {
+            const boundingBox = document.getElementById('boundingBox');
+            boundingBox.style.left = box.x + 'px';
+            boundingBox.style.top = box.y + 'px';
+            boundingBox.style.width = box.width + 'px';
+            boundingBox.style.height = box.height + 'px';
+        }
+
+        function selectRandomOrganism() {
+            const organismIndex = Math.floor(Math.random() * organisms.length);
+            const selectedOrganism = organisms[organismIndex];
+
+            // This is where you would fetch the actual image and bounding box data
+            // For demonstration, using placeholder data
+            const demoImageData = {
+                url: "path_to_your_image.jpg",
+                boundingBoxes: [
+                    {
+                        concept: selectedOrganism,
+                        x: 100,
+                        y: 100,
+                        width: 200,
+                        height: 150
+                    }
+                ]
+            };
+
+            return demoImageData;
+        }
+
+        document.getElementById('newImage').addEventListener('click', () => {
+            currentImageData = selectRandomOrganism();
+            const image = document.getElementById('mainImage');
+            image.src = currentImageData.url;
+
+            image.onload = () => {
+                const relevantBox = currentImageData.boundingBoxes[0];
+                drawBoundingBox(relevantBox);
+                document.getElementById('info').textContent =
+                    `Looking for: ${relevantBox.concept}`;
+            };
+        });
+
+        document.getElementById('runYolo').addEventListener('click', async () => {
+            if (!currentImageData) {
+                alert('Please select an image first!');
+                return;
+            }
+
+            // This is where you would integrate with your YOLOv9 implementation
+            document.getElementById('info').textContent =
+                'Running YOLOv9 detection... (Integration pending)';
+        });
+    </script>
+</body>
+</html>
